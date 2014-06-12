@@ -224,6 +224,22 @@ var _ = {};
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+	var result = false;
+	var testedArray = [];
+	if(collection.length > 0){
+	if(typeof(iterator) == 'function') {
+		testedArray = _.map(collection, iterator);
+	} else {
+		testedArray = collection;
+		}
+		}
+	if(testedArray.length > 0) {
+	result = _.reduce(testedArray, function (item, allTrue) {
+		allTrue = allTrue || item;
+		return allTrue? true:false;
+		}, false);
+	}
+	return result;
   };
 
 
@@ -246,11 +262,25 @@ var _ = {};
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(obj) {
+	for(var i=  1; i<arguments.length; i++){
+		for(var prps in arguments[i]){
+			obj[prps] = arguments[i][prps];
+			}
+		}
+	return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+  	for(var i=  1; i<arguments.length; i++){
+		for(var prps in arguments[i]){
+		if(obj[prps]==undefined){
+			obj[prps] = arguments[i][prps];
+			}
+			}
+		}
+	return obj;
   };
 
 
@@ -292,6 +322,18 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+	var results = {};
+	var result;
+	return function() {
+	if(results[arguments[0]] != undefined){
+		return results[arguments[0]];
+	} else {
+
+		result = func.apply(this, arguments);
+		results[arguments[0]] = result;
+		return result;
+	}		
+  };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
