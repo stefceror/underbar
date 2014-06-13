@@ -363,6 +363,24 @@ var _ = {};
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+	var results = Array.prototype.slice.call(array);
+	var alreadyUsed = [];
+	var currentIndex;
+	var goodIndex;
+	for(var i = 0; i <results.length; i++){
+	goodIndex = false;
+	currentIndex = Math.floor(Math.random()*array.length);
+		while(!goodIndex){
+			if(!_.contains(alreadyUsed, currentIndex)){
+			results[i] = array[currentIndex];
+			goodIndex = true;
+			} else {
+					currentIndex =Math.floor(Math.random()*array.length);
+					}
+		}
+		alreadyUsed.push(currentIndex);		
+	}
+	return results;
   };
 
 
